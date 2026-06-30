@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROSETTA — 김여은 UX/UI</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --ink:#0A0A0A; --paper:#FFFFFF; --yellow:#FFE600; --yellow-deep:#F2D200;
+    --gray:#6B6B6B; --soft:#F4F4F2; --line:#0A0A0A;
+    --sans:"Pretendard Variable",Pretendard,system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.45;overflow-x:hidden;letter-spacing:-.01em}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+  a{color:inherit;text-decoration:none}
+
+  .topbar{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:2px solid var(--ink)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{font-weight:800;font-size:17px;letter-spacing:-.02em}
+  .brand small{font-weight:600;color:var(--gray);font-size:12px;margin-left:10px;text-transform:uppercase;letter-spacing:.08em}
+  .topbar nav{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:flex;gap:24px}
+  .topbar nav a:hover{background:var(--yellow)}
+
+  /* marquee */
+  .marq{background:var(--yellow);border-bottom:2px solid var(--ink);overflow:hidden;white-space:nowrap;padding:11px 0}
+  .marq-track{display:inline-block;white-space:nowrap;animation:scroll 24s linear infinite;font-weight:800;
+    font-size:14px;letter-spacing:.02em;text-transform:uppercase}
+  .marq-track span{margin:0 18px}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* hero */
+  .hero{padding:80px 0 56px;border-bottom:2px solid var(--ink)}
+  .hero .eyebrow{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:26px}
+  .hero h1{font-size:clamp(52px,10vw,128px);font-weight:900;letter-spacing:-.05em;line-height:.92}
+  .hero h1 .hl{background:var(--yellow);padding:0 .08em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .hero .lede{font-size:clamp(18px,2.1vw,23px);font-weight:600;color:var(--ink);max-width:54ch;line-height:1.5;margin-top:34px}
+  .hero-shot{padding:64px 0 0}
+  .stage{display:flex;gap:28px;justify-content:center;align-items:flex-end;flex-wrap:wrap}
+
+  .meta{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);margin-top:64px}
+  .meta div{padding:24px 0;border-right:1px solid #ddd}
+  .meta div:last-child{border-right:none}
+  .meta .k{display:block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:8px}
+  .meta .v{font-size:17px;font-weight:800}
+
+  section{padding:92px 0;border-bottom:2px solid var(--ink)}
+  .blk-head{display:flex;align-items:flex-start;gap:24px;margin-bottom:54px}
+  .blk-head .bn{font-size:clamp(40px,6vw,72px);font-weight:900;line-height:.8;letter-spacing:-.04em;
+    -webkit-text-stroke:2px var(--ink);color:transparent}
+  .blk-head h2{font-size:clamp(34px,5vw,60px);font-weight:900;letter-spacing:-.04em;line-height:.9;text-transform:uppercase}
+
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--ink)}
+  .prob{padding:34px 30px 38px;border-right:1px solid #ddd}
+  .prob:last-child{border-right:none}
+  .prob .t{display:inline-block;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--yellow);padding:4px 9px;margin-bottom:20px}
+  .prob h3{font-size:27px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:13px}
+  .prob p{font-size:15px;color:var(--gray);line-height:1.6;font-weight:500}
+
+  .sol{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:66px 0;border-top:1px solid #ddd}
+  .sol:first-of-type{border-top:none}
+  .sol.flip .sol-txt{order:2}
+  .sol-txt .tag{display:inline-block;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--ink);color:var(--paper);padding:5px 11px;margin-bottom:20px}
+  .sol-txt h3{font-size:clamp(28px,3.4vw,42px);font-weight:900;letter-spacing:-.04em;line-height:1.04;margin-bottom:18px}
+  .sol-txt p{font-size:17px;line-height:1.65;color:var(--ink);font-weight:500}
+  .sol-img{display:flex;justify-content:center}
+
+  /* phone — editorial frame */
+  .phone{width:300px;border:2px solid var(--ink);border-radius:30px;padding:22px 17px;min-height:576px;
+    display:flex;flex-direction:column;background:var(--paper)}
+  .phone.sm{width:250px;min-height:486px;padding:18px 14px;border-radius:26px}
+  .ph-top{display:flex;justify-content:space-between;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ink);margin-bottom:16px}
+  .ph-title{font-size:23px;font-weight:900;letter-spacing:-.03em;margin-bottom:16px}
+  .btn{border:2px solid var(--ink);border-radius:8px;padding:15px;text-align:center;font-size:15px;font-weight:800;background:var(--yellow);color:var(--ink)}
+  .btn.dark{background:var(--ink);color:var(--paper)}
+  .btn.full{width:100%}
+
+  .tcard{border:2px solid var(--ink);border-radius:8px;padding:15px 16px}
+  .tcard.art{background:var(--yellow)}
+  .tcard.eng{background:var(--ink);color:var(--paper)}
+  .tc-lbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:13px}
+  .eng .tc-lbl{color:var(--yellow)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chips span{background:var(--paper);border:1.5px solid var(--ink);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:700}
+  .sketch{margin-top:11px;height:58px;border:1.5px dashed var(--ink);border-radius:6px;background:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .spec .srow{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-top:1px solid rgba(255,255,255,.18)}
+  .spec .srow:first-child{border-top:none}
+  .spec .srow .k{color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.04em;align-self:center}
+  .spec .srow .v{font-weight:800}
+  .tarrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+  .tarrow .ln{flex:1;height:2px;background:var(--ink)}
+
+  .role-tag{display:inline-block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;border:1.5px solid var(--ink);border-radius:999px;padding:4px 10px}
+  .role-tag.art{background:var(--yellow)}
+  .role-tag.eng{background:var(--ink);color:var(--paper)}
+
+  .thumb{height:118px;border:2px solid var(--ink);border-radius:6px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
+  .need{border:1.5px solid var(--ink);border-radius:6px;padding:12px 14px;margin-bottom:9px}
+  .need .nm{font-size:14px;font-weight:800}
+  .need .sub{font-size:12px;color:var(--gray);font-weight:600;margin-top:2px}
+
+  .mk-row{border:1.5px solid var(--ink);border-radius:6px;padding:12px 13px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .mk-thumb{width:46px;height:46px;border:1.5px solid var(--ink);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+  .mk-info{flex:1;min-width:0}
+  .mk-nm{font-size:15px;font-weight:800}
+  .mk-meta{font-size:12px;color:var(--gray);font-weight:600;margin-top:2px}
+  .mk-price{font-size:15px;font-weight:900;white-space:nowrap}
+
+  .prov{border:1.5px solid var(--ink);border-radius:6px;padding:6px 14px}
+  .prov .pr{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #eee}
+  .prov .pr:first-child{border-top:none}
+  .prov .av{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);flex-shrink:0}
+  .prov .nm{font-size:13px;font-weight:800}
+  .prov .ro{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+  .screens{background:var(--soft)}
+  .grow{display:flex;gap:26px;overflow-x:auto;padding:6px 4px 22px;scroll-snap-type:x mandatory}
+  .gitem{scroll-snap-align:center;flex-shrink:0}
+  .gcap{text-align:center;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:15px}
+
+  .ds-intro{font-size:18px;font-weight:600;max-width:54ch;line-height:1.55;margin-bottom:14px}
+  .ds-block{padding:42px 0;border-top:1px solid #ddd}
+  .ds-block:first-of-type{border-top:none;padding-top:6px}
+  .ds-label{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:26px}
+  .ds-grp{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:14px}
+  .ds-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:18px;margin-bottom:30px}
+  .ds-sw:last-child{margin-bottom:0}
+  .sw .chip{height:64px;border:2px solid var(--ink);border-radius:6px;margin-bottom:11px}
+  .sw .nm{font-size:14px;font-weight:800}
+  .sw .hex{font-size:12px;color:var(--gray);font-weight:700;margin-top:2px}
+  .ds-type{display:flex;flex-direction:column}
+  .ds-trow{display:flex;align-items:baseline;gap:26px;padding:18px 0;border-top:1px solid #eee}
+  .ds-trow:first-child{border-top:none;padding-top:0}
+  .ds-spec{width:130px;flex-shrink:0;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--gray)}
+  .ds-comp{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:18px}
+  .ds-tile{border:2px solid var(--ink);border-radius:10px;padding:24px 22px;display:flex;flex-direction:column;gap:16px;justify-content:center;min-height:148px}
+  .ds-tile .cap{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray)}
+
+  .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 24px}
+  .slot{position:relative;aspect-ratio:4/3;border:2px solid var(--ink);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:15px;background:var(--soft)}
+  .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .slot-hint{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+  .slot-hint i{font-style:normal;font-size:26px;line-height:1}
+  .rc-t{font-size:18px;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
+  .rcard p{font-size:14px;color:var(--gray);line-height:1.55;font-weight:600}
+  .role-note{margin-top:36px;font-size:16px;color:var(--ink);max-width:54ch;line-height:1.6;font-weight:600}
+
+  footer{padding:84px 0 60px}
+  .next{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:40px 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  .next .nk{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:12px}
+  .next h3{font-size:clamp(40px,6vw,80px);font-weight:900;letter-spacing:-.04em;line-height:.85}
+  .next a{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--yellow);border:2px solid var(--ink);border-radius:8px;padding:15px 26px;white-space:nowrap}
+  .next a:hover{background:var(--ink);color:var(--paper)}
+  .fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:40px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gray)}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:840px){
+    .sol,.sol.flip .sol-txt{grid-template-columns:1fr;order:0}
+    .prob-grid{grid-template-columns:1fr}
+    .prob{border-right:none;border-bottom:1px solid #ddd}
+    .roles,.meta{grid-template-columns:1fr 1fr}
+    .topbar nav{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.marq-track{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">김여은 <small>UX/UI</small></div>
+    <nav><a href="#problem">Problem</a><a href="#solution">Solution</a><a href="#screens">Screens</a><a href="#system">System</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<div class="marq">
+  <div class="marq-track">
+    <span>ARTIST → ENGINEER</span>●<span>아티스트의 언어를 엔지니어의 언어로</span>●<span>ROSETTA</span>●<span>ARTIST → ENGINEER</span>●<span>아티스트의 언어를 엔지니어의 언어로</span>●<span>ROSETTA</span>●
+  </div>
+</div>
+
+<section class="hero" style="border-bottom:2px solid var(--ink)">
+  <div class="wrap">
+    <div class="eyebrow">ROSETTA — 협업 마켓플레이스</div>
+    <h1>아티스트의 언어를<br><span class="hl">엔지니어의 언어로</span></h1>
+    <p class="lede">아티스트가 미디어아트 프로젝트를 올리면 AI가 엔지니어의 언어로 번역하고, 엔지니어가 어플라이해 함께 만들고 거래하는 양면 플랫폼.</p>
+    <div class="hero-shot"><div class="stage">
+
+      <div class="phone sm reveal">
+        <div class="ph-top"><span>번역</span><span>1/2</span></div>
+        <div class="tcard art"><div class="tc-lbl">아티스트가 올린 것</div>
+          <div class="chips"><span>몽환적</span><span>물결</span><span>청록빛</span></div>
+          <div class="sketch">스케치 · 레퍼런스</div>
+        </div>
+        <div class="tarrow"><div class="ln"></div>AI 번역<div class="ln"></div></div>
+        <div class="tcard eng"><div class="tc-lbl">엔지니어 브리프</div>
+          <div class="spec">
+            <div class="srow"><span class="k">동작</span><span class="v">파동 LED</span></div>
+            <div class="srow"><span class="k">소재</span><span class="v">아크릴·확산</span></div>
+            <div class="srow"><span class="k">크기</span><span class="v">1.2 × 2m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone reveal">
+        <div class="ph-top"><span class="role-tag eng">엔지니어</span><span>물결 미디어월</span></div>
+        <div class="thumb">프로젝트 미리보기</div>
+        <div class="ph-title" style="font-size:20px">필요한 모듈</div>
+        <div class="need"><div class="nm">LED 파동 제어</div><div class="sub">아두이노 · BLE</div></div>
+        <div class="need"><div class="nm">확산 패널 설계</div><div class="sub">기구</div></div>
+        <div style="margin-top:auto"><div class="btn full">이 프로젝트에 어플라이</div></div>
+      </div>
+
+      <div class="phone sm reveal">
+        <div class="ph-top"><span>모듈 마켓</span><span>인기순</span></div>
+        <div class="mk-row"><div class="mk-thumb" style="background:var(--yellow)">LED</div><div class="mk-info"><div class="mk-nm">파동 LED</div><div class="mk-meta">★ 4.9 · 지호</div></div><div class="mk-price">₩89,000</div></div>
+        <div class="mk-row"><div class="mk-thumb" style="background:var(--ink);color:var(--yellow)">SND</div><div class="mk-info"><div class="mk-nm">사운드 반응</div><div class="mk-meta">★ 4.8 · 민규</div></div><div class="mk-price">₩120,000</div></div>
+        <div class="mk-row"><div class="mk-thumb" style="background:var(--yellow)">SEN</div><div class="mk-info"><div class="mk-nm">근접 센서</div><div class="mk-meta">★ 4.7 · 수아</div></div><div class="mk-price">₩64,000</div></div>
+      </div>
+
+    </div></div>
+    <div class="meta">
+      <div><span class="k">Role</span><span class="v">UX/UI · 멀티사이드</span></div>
+      <div><span class="k">Surface</span><span class="v">iOS · Web</span></div>
+      <div><span class="k">Focus</span><span class="v">정보 구조 · 신뢰</span></div>
+      <div><span class="k">Year</span><span class="v">2026</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap reveal">
+    <div class="blk-head"><span class="bn">01</span><h2>Problem</h2></div>
+    <div class="prob-grid">
+      <div class="prob"><div class="t">번역</div><h3>느낌 vs 사양</h3><p>아티스트는 느낌과 은유로 말하고, 엔지니어는 수치와 모듈로 만든다. 이 사이에서 프로젝트가 멈춘다.</p></div>
+      <div class="prob"><div class="t">세 시선</div><h3>한 프로젝트, 세 얼굴</h3><p>같은 작품을 아티스트는 비전으로, 엔지니어는 구현 과제로, 구매자는 완성품으로 본다.</p></div>
+      <div class="prob"><div class="t">신뢰</div><h3>믿어도 되나</h3><p>협업도 거래도 결국 "이 사람을, 이 모듈을 믿어도 되나"에서 갈린다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="solution">
+  <div class="wrap">
+    <div class="blk-head reveal"><span class="bn">02</span><h2>Solution</h2></div>
+
+    <div class="sol reveal">
+      <div class="sol-txt">
+        <div class="tag">번역을 입구에</div>
+        <h3>업로드 자체가 번역이 되도록</h3>
+        <p>아티스트는 사양을 모른다. 그래서 스케치·무드·레퍼런스를 올리면 그 자리에서 엔지니어가 읽을 구조화된 브리프로 바뀐다. 아티스트는 쉽게 올리고, 엔지니어는 바로 어플라이한다.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="ph-top"><span>프로젝트 번역</span><span>1 / 2</span></div>
+          <div class="tcard art"><div class="tc-lbl">아티스트가 올린 것</div>
+            <div class="chips"><span>몽환적</span><span>물결</span><span>청록빛</span><span>느린 호흡</span></div>
+            <div class="sketch">스케치 · 레퍼런스 이미지</div>
+          </div>
+          <div class="tarrow"><div class="ln"></div>AI 번역<div class="ln"></div></div>
+          <div class="tcard eng"><div class="tc-lbl">엔지니어 브리프</div>
+            <div class="spec">
+              <div class="srow"><span class="k">동작</span><span class="v">파동형 LED 패턴</span></div>
+              <div class="srow"><span class="k">소재</span><span class="v">아크릴 + 확산 필름</span></div>
+              <div class="srow"><span class="k">크기</span><span class="v">1.2 × 2m</span></div>
+              <div class="srow"><span class="k">제어</span><span class="v">BLE · 앱 연동</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sol flip reveal">
+      <div class="sol-txt">
+        <div class="tag">한 프로젝트, 세 얼굴</div>
+        <h3>역할에 따라 다르게 열린다</h3>
+        <p>같은 프로젝트 페이지가 아티스트에겐 협업 관리로, 엔지니어에겐 사양과 어플라이로, 구매자에겐 작품과 구매로 열린다. 한 데이터를 세 개의 정보 밀도로 나눴다.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="ph-top"><span class="role-tag eng">엔지니어</span><span>물결 미디어월</span></div>
+          <div class="thumb">프로젝트 미리보기</div>
+          <div class="ph-title" style="font-size:19px;margin-bottom:12px">필요한 모듈 2</div>
+          <div class="need"><div class="nm">LED 파동 제어</div><div class="sub">아두이노 · BLE · FastLED</div></div>
+          <div class="need"><div class="nm">확산 패널 설계</div><div class="sub">기구 · 아크릴</div></div>
+          <div style="margin-top:auto"><div class="btn full">이 프로젝트에 어플라이</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sol reveal">
+      <div class="sol-txt">
+        <div class="tag">신뢰를 보이게</div>
+        <h3>누가, 어떻게 만들었는지</h3>
+        <p>엔지니어 프로필엔 만든 모듈과 협업 이력을, 완성된 작품엔 누가 무엇을 맡았는지의 계보를 드러냈다. 거래 전에 불안을 먼저 줄였다.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="ph-top"><span>작품</span><span>판매중</span></div>
+          <div class="thumb">물결 미디어월</div>
+          <div class="ph-title" style="font-size:20px;margin-bottom:6px">물결 미디어월</div>
+          <div style="font-size:12px;color:var(--gray);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">제작 계보</div>
+          <div class="prov">
+            <div class="pr"><div class="av" style="background:var(--yellow)"></div><div><div class="nm">유진</div><div class="ro">아티스트 · 컨셉</div></div></div>
+            <div class="pr"><div class="av" style="background:var(--ink)"></div><div><div class="nm">지호</div><div class="ro">엔지니어 · LED 제어</div></div></div>
+          </div>
+          <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between"><div class="mk-price" style="font-size:18px">₩2,400,000</div><div class="btn dark" style="padding:13px 22px">구매 문의</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="screens">
+  <div class="wrap reveal">
+    <div class="blk-head"><span class="bn">03</span><h2>Screens</h2></div>
+    <div class="grow">
+      <div class="gitem"><div class="gcap">번역 — 업로드</div>
+        <div class="phone sm"><div class="ph-top"><span>번역</span><span>1/2</span></div>
+          <div class="tcard art"><div class="tc-lbl">아티스트가 올린 것</div><div class="chips"><span>몽환적</span><span>물결</span><span>청록빛</span></div><div class="sketch">스케치</div></div>
+          <div class="tarrow"><div class="ln"></div>AI 번역<div class="ln"></div></div>
+          <div class="tcard eng"><div class="tc-lbl">엔지니어 브리프</div><div class="spec">
+            <div class="srow"><span class="k">동작</span><span class="v">파동 LED</span></div>
+            <div class="srow"><span class="k">소재</span><span class="v">아크릴</span></div>
+            <div class="srow"><span class="k">크기</span><span class="v">1.2×2m</span></div></div></div></div></div>
+      <div class="gitem"><div class="gcap">프로젝트 — 엔지니어</div>
+        <div class="phone sm"><div class="ph-top"><span class="role-tag eng">엔지니어</span><span>물결</span></div>
+          <div class="thumb" style="height:94px">미리보기</div>
+          <div class="ph-title" style="font-size:18px;margin-bottom:10px">필요한 모듈</div>
+          <div class="need"><div class="nm">LED 파동 제어</div><div class="sub">아두이노·BLE</div></div>
+          <div class="need"><div class="nm">확산 패널</div><div class="sub">기구</div></div>
+          <div style="margin-top:auto"><div class="btn full">어플라이</div></div></div></div>
+      <div class="gitem"><div class="gcap">모듈 마켓</div>
+        <div class="phone sm"><div class="ph-top"><span>모듈 마켓</span><span>인기순</span></div>
+          <div class="mk-row"><div class="mk-thumb" style="background:var(--yellow)">LED</div><div class="mk-info"><div class="mk-nm">파동 LED</div><div class="mk-meta">★ 4.9 · 지호</div></div><div class="mk-price">₩89,000</div></div>
+          <div class="mk-row"><div class="mk-thumb" style="background:var(--ink);color:var(--yellow)">SND</div><div class="mk-info"><div class="mk-nm">사운드 반응</div><div class="mk-meta">★ 4.8 · 민규</div></div><div class="mk-price">₩120,000</div></div>
+          <div class="mk-row"><div class="mk-thumb" style="background:var(--yellow)">SEN</div><div class="mk-info"><div class="mk-nm">근접 센서</div><div class="mk-meta">★ 4.7 · 수아</div></div><div class="mk-price">₩64,000</div></div></div></div>
+      <div class="gitem"><div class="gcap">작품 — 신뢰·계보</div>
+        <div class="phone sm"><div class="ph-top"><span>작품</span><span>판매중</span></div>
+          <div class="thumb" style="height:94px">물결 미디어월</div>
+          <div class="ph-title" style="font-size:18px;margin-bottom:4px">물결 미디어월</div>
+          <div style="font-size:11px;color:var(--gray);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">제작 계보</div>
+          <div class="prov" style="padding:4px 12px">
+            <div class="pr"><div class="av" style="background:var(--yellow)"></div><div><div class="nm">유진</div><div class="ro">아티스트</div></div></div>
+            <div class="pr"><div class="av" style="background:var(--ink)"></div><div><div class="nm">지호</div><div class="ro">엔지니어</div></div></div></div>
+          <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between"><div class="mk-price">₩2.4M</div><div class="btn dark" style="padding:11px 18px;font-size:14px">구매</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="system">
+  <div class="wrap reveal">
+    <div class="blk-head"><span class="bn">04</span><h2>System</h2></div>
+    <p class="ds-intro">두 개의 언어가 만나는 서비스. 색도 둘로 갈랐다 — 아티스트는 옐로우, 엔지니어는 블랙. 번역 화면에서 두 색이 위아래로 맞물린다.</p>
+
+    <div class="ds-block">
+      <div class="ds-label">Color</div>
+      <div class="ds-grp">Dual — 두 언어</div>
+      <div class="ds-sw">
+        <div class="sw"><div class="chip" style="background:#FFE600"></div><div class="nm">아티스트</div><div class="hex">#FFE600</div></div>
+        <div class="sw"><div class="chip" style="background:#0A0A0A"></div><div class="nm">엔지니어</div><div class="hex">#0A0A0A</div></div>
+        <div class="sw"><div class="chip" style="background:#FFFFFF"></div><div class="nm">Paper</div><div class="hex">#FFFFFF</div></div>
+        <div class="sw"><div class="chip" style="background:#F4F4F2"></div><div class="nm">Soft</div><div class="hex">#F4F4F2</div></div>
+        <div class="sw"><div class="chip" style="background:#6B6B6B"></div><div class="nm">Gray</div><div class="hex">#6B6B6B</div></div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <div class="ds-label">Typography — Pretendard</div>
+      <div class="ds-type">
+        <div class="ds-trow"><div class="ds-spec">Display · 900</div><div style="font-size:38px;font-weight:900;letter-spacing:-.04em;line-height:.9">ROSETTA</div></div>
+        <div class="ds-trow"><div class="ds-spec">Title · 900</div><div style="font-size:26px;font-weight:900;letter-spacing:-.03em">물결 미디어월</div></div>
+        <div class="ds-trow"><div class="ds-spec">Body · 500</div><div style="font-size:16px;font-weight:500">엔지니어가 읽을 브리프로 바뀐다</div></div>
+        <div class="ds-trow"><div class="ds-spec">Label · 800</div><div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em">아티스트가 올린 것</div></div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <div class="ds-label">Components</div>
+      <div class="ds-comp">
+        <div class="ds-tile"><div class="cap">번역 카드 (Art → Eng)</div>
+          <div class="tcard art" style="padding:11px 13px"><div class="tc-lbl" style="margin-bottom:8px">아티스트</div><div class="chips"><span>물결</span><span>청록빛</span></div></div>
+          <div class="tcard eng" style="padding:11px 13px"><div class="tc-lbl" style="margin-bottom:8px">엔지니어</div><div class="spec"><div class="srow"><span class="k">동작</span><span class="v">파동 LED</span></div></div></div>
+        </div>
+        <div class="ds-tile"><div class="cap">역할 태그</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="role-tag art">아티스트</span><span class="role-tag eng">엔지니어</span></div>
+        </div>
+        <div class="ds-tile"><div class="cap">마켓 row</div>
+          <div class="mk-row" style="margin:0"><div class="mk-thumb" style="background:var(--yellow)">LED</div><div class="mk-info"><div class="mk-nm">파동 LED</div><div class="mk-meta">★ 4.9</div></div><div class="mk-price">₩89,000</div></div>
+        </div>
+        <div class="ds-tile"><div class="cap">버튼</div>
+          <div class="btn full">어플라이</div><div class="btn dark full">구매 문의</div>
+        </div>
+        <div class="ds-tile"><div class="cap">제작 계보</div>
+          <div class="prov" style="padding:4px 12px"><div class="pr"><div class="av" style="background:var(--yellow)"></div><div><div class="nm">유진</div><div class="ro">아티스트</div></div></div></div>
+        </div>
+        <div class="ds-tile"><div class="cap">Foundation</div>
+          <div style="font-size:14px;font-weight:700;line-height:1.9">Radius <b>6–8px</b><br>Rule <b>2px solid</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="blk-head"><span class="bn">05</span><h2>Role</h2></div>
+    <div class="roles">
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/rosetta-multiside.jpg" alt="멀티사이드 정보 구조"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">멀티사이드 정보 구조</div><p>아티스트·엔지니어·구매자 세 여정 설계.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/rosetta-translation.jpg" alt="번역 흐름 UX"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">번역 흐름 UX</div><p>모호한 의도를 구조화된 브리프로.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/rosetta-market.jpg" alt="마켓플레이스 흐름"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">마켓플레이스 흐름</div><p>모듈·작품 거래와 어플라이 설계.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/rosetta-system.jpg" alt="디자인 시스템"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">디자인 시스템 구축</div><p>두 언어를 한 시스템으로 묶는 토큰화.</p></figcaption>
+      </figure>
+    </div>
+    <p class="role-note">번역 엔진과 매칭 알고리즘은 별도 팀의 영역. 결과를 사람이 신뢰하고 다루는 화면을 설계했다.</p>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="next"><div><div class="nk">Next</div><h3>PATH</h3></div><a href="path-case.html">다음 케이스 →</a></div>
+    <div class="fbottom"><span>김여은 · UX/UI Designer</span><span>hello@yeoeun.design</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>

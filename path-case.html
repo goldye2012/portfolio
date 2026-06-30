@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATH — 김여은 UX/UI</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --ink:#15171A; --paper:#FFFFFF; --soft:#F4F5F3; --soft-2:#FAFAF9;
+    --gray:#73776F; --line:#E7E8E4;
+    --green:#3E7C5F; --green-deep:#2E6149; --green-soft:#EAF2ED;
+    --sans:"Pretendard Variable",Pretendard,system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;letter-spacing:-.01em}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--green)}
+  .num{font-size:13px;font-weight:600;letter-spacing:.12em;color:var(--gray);margin-bottom:16px}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-weight:700;font-size:16px}
+  .brand small{font-weight:500;color:var(--gray);font-size:12px;margin-left:10px;text-transform:uppercase;letter-spacing:.1em}
+  .topbar nav{font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--gray);display:flex;gap:26px}
+  .topbar nav a:hover{color:var(--green)}
+
+  .hero{padding:110px 0 60px;text-align:center}
+  .hero h1{font-size:clamp(44px,7vw,82px);font-weight:700;letter-spacing:-.035em;line-height:1.04;margin:22px auto 26px;max-width:15ch}
+  .hero .lede{font-size:clamp(17px,2vw,21px);color:var(--gray);max-width:52ch;margin:0 auto;line-height:1.7;font-weight:400}
+
+  .imgband{margin:80px 0 0}
+  .bigslot{position:relative;width:100%;aspect-ratio:16/8;border-radius:24px;overflow:hidden;background:var(--soft);
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .bigslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .bigslot .hint{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--gray);font-size:14px;font-weight:600}
+  .bigslot .hint i{font-style:normal;font-size:30px}
+  .bigslot .cap{position:absolute;left:24px;bottom:22px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px}
+
+  .stage{display:flex;gap:30px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-top:80px}
+
+  .meta{display:flex;flex-wrap:wrap;justify-content:center;gap:50px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 0;margin:80px 0 0}
+  .meta div{text-align:center}
+  .meta .k{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:8px}
+  .meta .v{font-size:16px;font-weight:600}
+
+  section{padding:108px 0}
+  .blk-head{margin-bottom:52px}
+  .blk-head h2{font-size:clamp(32px,4.2vw,46px);font-weight:700;letter-spacing:-.03em}
+
+  /* stats — Esper big numbers */
+  .stats{background:var(--ink);color:#fff}
+  .stats .blk-head h2{color:#fff}
+  .stats .num{color:rgba(255,255,255,.5)}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
+  .stat{background:var(--ink);padding:42px 34px}
+  .stat .big{font-size:clamp(52px,7vw,86px);font-weight:700;letter-spacing:-.04em;line-height:.9;margin-bottom:18px}
+  .stat .big s{font-size:.42em;font-weight:600;text-decoration:none;color:rgba(255,255,255,.6);margin-left:4px}
+  .stat .lbl{font-size:14px;color:rgba(255,255,255,.7);line-height:1.55;font-weight:500}
+  .stat .big.accent{color:#7FBF9F}
+
+  .problem{background:var(--soft-2)}
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .prob{background:#fff;border:1px solid var(--line);border-radius:20px;padding:34px 30px}
+  .prob .t{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:18px}
+  .prob h3{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.3;margin-bottom:12px}
+  .prob p{font-size:15px;color:var(--gray);line-height:1.65;font-weight:400}
+
+  .sol{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;padding:66px 0;border-top:1px solid var(--line)}
+  .sol:first-of-type{border-top:none;padding-top:8px}
+  .sol.flip .sol-txt{order:2}
+  .sol-txt .tag{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:18px}
+  .sol-txt h3{font-size:clamp(26px,3.2vw,36px);font-weight:700;letter-spacing:-.03em;line-height:1.2;margin-bottom:18px}
+  .sol-txt p{font-size:17px;line-height:1.75;color:var(--gray);font-weight:400}
+  .sol-img{display:flex;justify-content:center}
+
+  /* phone */
+  .phone{width:300px;border:1px solid var(--line);border-radius:40px;padding:26px 20px;min-height:586px;
+    display:flex;flex-direction:column;background:#fff;box-shadow:0 34px 80px -40px rgba(21,23,26,.28)}
+  .phone.sm{width:252px;min-height:498px;padding:22px 16px;border-radius:34px}
+  .ph-eye{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);margin-bottom:14px}
+
+  /* check-in */
+  .ci-q{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.3;margin-bottom:26px}
+  .ci-opt{border:1px solid var(--line);border-radius:16px;padding:16px 18px;font-size:16px;font-weight:600;margin-bottom:10px}
+  .ci-opt.sel{border:1.5px solid var(--green);background:var(--green-soft);color:var(--green-deep)}
+  .ci-note{margin-top:6px;background:var(--soft);border-radius:16px;padding:15px 17px;font-size:14px;color:var(--gray);font-weight:500}
+  .ci-cta{margin-top:auto;background:var(--green);border-radius:16px;padding:17px;text-align:center;font-size:16px;font-weight:600;color:#fff}
+
+  /* recovery */
+  .rc-eye{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);margin-bottom:6px}
+  .rc-big{font-size:54px;font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:4px}
+  .rc-big s{font-size:.4em;font-weight:600;text-decoration:none;color:var(--gray);margin-left:3px}
+  .rc-sub{font-size:14px;color:var(--gray);font-weight:500;margin-bottom:24px}
+  .rc-chart{height:108px;margin-bottom:24px}
+  .rc-grip .g{margin-bottom:14px}
+  .rc-grip .gt{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:7px}
+  .rc-grip .gt span:last-child{color:var(--green)}
+  .rc-bar{height:8px;border-radius:5px;background:var(--soft)}
+  .rc-bar i{display:block;height:100%;border-radius:5px;background:var(--green)}
+
+  /* guide */
+  .gd-card{background:var(--green-soft);border-radius:20px;padding:24px;margin-bottom:14px}
+  .gd-card .l{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--green-deep);margin-bottom:12px}
+  .gd-card .t{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.3}
+  .gd-soft{background:var(--soft);border-radius:16px;padding:16px 18px;font-size:14px;color:var(--gray);font-weight:500;line-height:1.6}
+
+  /* weekly */
+  .wk-t{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+  .wk-sub{font-size:14px;color:var(--gray);font-weight:500;margin-bottom:24px}
+  .wk-dots{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+  .wk-dots i{width:30px;height:30px;border-radius:9px;background:var(--soft)}
+  .wk-dots i.on{background:var(--green)}
+  .wk-dots i.mid{background:#A7CDB8}
+  .wk-note{background:var(--soft);border-radius:16px;padding:16px 18px;font-size:14px;color:var(--ink);font-weight:500;line-height:1.6}
+  .wk-note b{color:var(--green);font-weight:700}
+
+  /* stories */
+  .stories{background:var(--soft-2)}
+  .story-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .story .pslot{position:relative;aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .story .pslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .story .pslot .hint{color:var(--gray);font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:7px}
+  .story .pslot .hint i{font-style:normal;font-size:24px}
+  .story .nm{font-size:17px;font-weight:700;margin-bottom:3px}
+  .story .desc{font-size:14px;color:var(--gray);font-weight:500;line-height:1.55}
+
+  .screens{background:var(--soft-2)}
+  .grow{display:flex;gap:28px;overflow-x:auto;padding:6px 4px 22px;scroll-snap-type:x mandatory}
+  .gitem{scroll-snap-align:center;flex-shrink:0}
+  .gcap{text-align:center;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:16px}
+
+  .ds-intro{font-size:17px;color:var(--gray);font-weight:400;max-width:54ch;line-height:1.7;margin-bottom:12px}
+  .ds-block{padding:42px 0;border-top:1px solid var(--line)}
+  .ds-block:first-of-type{border-top:none;padding-top:6px}
+  .ds-label{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:26px}
+  .ds-grp{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);margin-bottom:14px}
+  .ds-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:18px;margin-bottom:30px}
+  .ds-sw:last-child{margin-bottom:0}
+  .sw .chip{height:64px;border-radius:14px;border:1px solid var(--line);margin-bottom:11px}
+  .sw .nm{font-size:14px;font-weight:600}
+  .sw .hex{font-size:12px;color:var(--gray);font-weight:500;margin-top:2px}
+  .ds-type{display:flex;flex-direction:column}
+  .ds-trow{display:flex;align-items:baseline;gap:26px;padding:18px 0;border-top:1px solid var(--line)}
+  .ds-trow:first-child{border-top:none;padding-top:0}
+  .ds-spec{width:130px;flex-shrink:0;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--gray)}
+  .ds-comp{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+  .ds-tile{border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center;min-height:148px}
+  .ds-tile .cap{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray)}
+
+  .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 24px}
+  .slot{position:relative;aspect-ratio:4/3;background:var(--soft);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .slot-hint{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gray);font-size:14px;font-weight:600}
+  .slot-hint i{font-style:normal;font-size:26px;line-height:1}
+  .rc-t{font-size:17px;font-weight:700;margin-bottom:6px}
+  .rcard p{font-size:14px;color:var(--gray);line-height:1.6;font-weight:400}
+  .role-note{margin-top:36px;font-size:16px;color:var(--gray);max-width:54ch;line-height:1.7;font-weight:400}
+
+  footer{padding:96px 0 64px;border-top:1px solid var(--line)}
+  .next{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:36px 0}
+  .next .nk{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:12px}
+  .next h3{font-size:clamp(30px,4vw,44px);font-weight:700;letter-spacing:-.03em}
+  .next a{font-size:14px;font-weight:600;color:#fff;background:var(--ink);border-radius:14px;padding:15px 26px;white-space:nowrap;transition:.15s}
+  .next a:hover{background:var(--green)}
+  .fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:44px;font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--gray)}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:840px){
+    .sol,.sol.flip .sol-txt{grid-template-columns:1fr;order:0}
+    .prob-grid,.roles,.stat-grid,.story-grid{grid-template-columns:1fr}
+    .topbar nav{display:none}.meta{gap:32px}
+  }
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">김여은 <small>UX/UI</small></div>
+    <nav><a href="#problem">Problem</a><a href="#solution">Solution</a><a href="#screens">Screens</a><a href="#system">System</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">PATH — 로봇의수 재활</span>
+    <h1>매일의 회복을,<br>압박 없이</h1>
+    <p class="lede">로봇의수 사용자의 일상 재활을 관리하는 모바일 앱. 데이터를 경쟁이 아니라 자기 호흡으로 마주하게, 회복을 동행처럼 느끼게 설계했다.</p>
+
+    <div class="imgband">
+      <div class="bigslot">
+        <!-- 이미지 추가: 아래 주석을 풀고 src를 넣으세요 -->
+        <!-- <img src="images/path-hero.jpg" alt="로봇의수 사용자"> -->
+        <span class="hint"><i>＋</i>제품 · 사용자 사진</span>
+        <span class="cap">Hero Visual</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="phone sm reveal">
+        <div class="ph-eye">오늘의 체크인</div>
+        <div class="ci-q">오늘 손은<br>어땠나요?</div>
+        <div class="ci-opt sel">편안했어요</div>
+        <div class="ci-opt">조금 뻐근했어요</div>
+        <div class="ci-opt">불편했어요</div>
+        <div class="ci-cta">기록하기</div>
+      </div>
+
+      <div class="phone reveal">
+        <div class="rc-eye">이번 주 회복</div>
+        <div class="rc-big">4.2<s>시간</s></div>
+        <div class="rc-sub">하루 평균 착용 시간</div>
+        <svg class="rc-chart" viewBox="0 0 280 108" preserveAspectRatio="none">
+          <path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14 L280,108 L0,108 Z" fill="#EAF2ED"/>
+          <path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14" fill="none" stroke="#3E7C5F" stroke-width="2.5"/>
+        </svg>
+        <div class="rc-grip">
+          <div class="g"><div class="gt"><span>병 잡기</span><span>72%</span></div><div class="rc-bar"><i style="width:72%"></i></div></div>
+          <div class="g"><div class="gt"><span>주먹 쥐기</span><span>28%</span></div><div class="rc-bar"><i style="width:28%"></i></div></div>
+        </div>
+      </div>
+
+      <div class="phone sm reveal">
+        <div class="ph-eye">오늘의 가이드</div>
+        <div class="gd-card"><div class="l">Today</div><div class="t">손가락 펴기<br>5분</div></div>
+        <div class="gd-soft">짧게, 편한 만큼만. 오늘 못 해도 괜찮아요.</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div><span class="k">Role</span><span class="v">UX/UI · 전 화면</span></div>
+      <div><span class="k">Surface</span><span class="v">iOS · Android</span></div>
+      <div><span class="k">Focus</span><span class="v">정서적 UX · 접근성</span></div>
+      <div><span class="k">Year</span><span class="v">2026</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ STATS</div><h2>매일이 데이터가 된다</h2></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="big accent">4.2<s>시간</s></div><div class="lbl">하루 평균 착용 시간 — 회복의 일상화 정도를 보여준다</div></div>
+      <div class="stat"><div class="big">18<s>일</s></div><div class="lbl">앱과 함께한 날 — 경쟁이 아니라 누적으로 쌓인다</div></div>
+      <div class="stat"><div class="big">72<s>%</s></div><div class="lbl">가장 많이 쓴 그립(병 잡기) — 일상에서의 실제 사용 패턴</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="problem" class="problem">
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ 01</div><h2>Problem</h2></div>
+    <div class="prob-grid">
+      <div class="prob"><div class="t">존엄</div><h3>환자가 아니라 한 사람으로</h3><p>부족함을 들이미는 화면은 닫힌다. 회복은 평가받는 일이 아니다.</p></div>
+      <div class="prob"><div class="t">지속</div><h3>매일 열게 만들기</h3><p>재활은 길고, 하루의 변화는 눈에 잘 띄지 않는다. 돌아올 이유가 필요하다.</p></div>
+      <div class="prob"><div class="t">감정</div><h3>나쁜 날의 데이터</h3><p>모든 날이 좋을 수는 없다. 힘든 날의 숫자를 어떻게 보여줄 것인가.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="solution">
+  <div class="wrap">
+    <div class="blk-head reveal"><div class="num">/ 02</div><h2>Solution</h2></div>
+
+    <div class="sol reveal">
+      <div class="sol-txt">
+        <div class="tag">경쟁을 지운다</div>
+        <h3>비교 대신 자기 호흡으로</h3>
+        <p>랭킹도, 어제와의 비교도 뺐다. 오늘의 변화만 잔잔히 보여주고, 그립 패턴처럼 자기 일상이 그대로 드러나는 데이터로 채웠다.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="rc-eye">이번 주 회복</div>
+          <div class="rc-big">4.2<s>시간</s></div>
+          <div class="rc-sub">하루 평균 착용 시간</div>
+          <svg class="rc-chart" viewBox="0 0 280 108" preserveAspectRatio="none">
+            <path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14 L280,108 L0,108 Z" fill="#EAF2ED"/>
+            <path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14" fill="none" stroke="#3E7C5F" stroke-width="2.5"/>
+          </svg>
+          <div class="rc-grip">
+            <div class="g"><div class="gt"><span>병 잡기</span><span>72%</span></div><div class="rc-bar"><i style="width:72%"></i></div></div>
+            <div class="g"><div class="gt"><span>주먹 쥐기</span><span>28%</span></div><div class="rc-bar"><i style="width:28%"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sol flip reveal">
+      <div class="sol-txt">
+        <div class="tag">가벼운 진입</div>
+        <h3>한 번의 탭으로 끝나는 기록</h3>
+        <p>매일 열려면 가벼워야 한다. 한 번의 탭과 한 문장으로 오늘을 기록한다. 못 한 날에도 부담을 주지 않는 말투로.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="ph-eye">오늘의 체크인</div>
+          <div class="ci-q">오늘 손은<br>어땠나요?</div>
+          <div class="ci-opt sel">편안했어요</div>
+          <div class="ci-opt">조금 뻐근했어요</div>
+          <div class="ci-opt">불편했어요</div>
+          <div class="ci-note">한 줄 메모를 남겨도 좋아요 (선택)</div>
+          <div class="ci-cta">기록하기</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sol reveal">
+      <div class="sol-txt">
+        <div class="tag">쌓이는 흐름</div>
+        <h3>나쁜 날도 과정의 일부로</h3>
+        <p>꺾이는 그래프 대신 누적되는 시각화로 바꿨다. 힘든 날도 끊김이 아니라 함께한 날의 일부로 보이게 해, 돌아올 때 죄책감이 아니라 환대를 주려 했다.</p>
+      </div>
+      <div class="sol-img">
+        <div class="phone">
+          <div class="ph-eye">주간 돌아보기</div>
+          <div class="wk-t">3주째 함께하고 있어요</div>
+          <div class="wk-sub">꾸준함보다 다시 돌아오는 것</div>
+          <div class="wk-dots">
+            <i class="on"></i><i class="on"></i><i class="mid"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="mid"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="mid"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="mid"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+          </div>
+          <div class="wk-note">지난주보다 <b>편안한 날이 2일 늘었어요.</b> 오늘도 충분히 잘하고 있어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stories">
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ 03</div><h2>Real stories</h2></div>
+    <div class="story-grid">
+      <div class="story">
+        <div class="pslot"><!-- <img src="images/path-user-1.jpg" alt="사용자"> --><span class="hint"><i>＋</i>인물 사진</span></div>
+        <div class="nm">민준</div><div class="desc">목공을 다시 시작한 6개월째 사용자.</div>
+      </div>
+      <div class="story">
+        <div class="pslot"><!-- <img src="images/path-user-2.jpg" alt="사용자"> --><span class="hint"><i>＋</i>인물 사진</span></div>
+        <div class="nm">서연</div><div class="desc">매일 아침 체크인으로 하루를 여는 1년차.</div>
+      </div>
+      <div class="story">
+        <div class="pslot"><!-- <img src="images/path-user-3.jpg" alt="사용자"> --><span class="hint"><i>＋</i>인물 사진</span></div>
+        <div class="nm">도윤</div><div class="desc">기타 연주를 위해 그립을 맞춰가는 중.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="screens">
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ 04</div><h2>Screens</h2></div>
+    <div class="grow">
+      <div class="gitem"><div class="gcap">데일리 체크인</div>
+        <div class="phone sm"><div class="ph-eye">오늘의 체크인</div><div class="ci-q">오늘 손은<br>어땠나요?</div>
+          <div class="ci-opt sel">편안했어요</div><div class="ci-opt">조금 뻐근했어요</div><div class="ci-opt">불편했어요</div>
+          <div class="ci-cta">기록하기</div></div></div>
+      <div class="gitem"><div class="gcap">회복 추이</div>
+        <div class="phone sm"><div class="rc-eye">이번 주 회복</div><div class="rc-big">4.2<s>시간</s></div><div class="rc-sub">하루 평균 착용</div>
+          <svg class="rc-chart" viewBox="0 0 280 108" preserveAspectRatio="none"><path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14 L280,108 L0,108 Z" fill="#EAF2ED"/><path d="M0,86 C40,80 60,64 100,58 C140,52 160,40 200,32 C240,24 260,20 280,14" fill="none" stroke="#3E7C5F" stroke-width="2.5"/></svg>
+          <div class="rc-grip"><div class="g"><div class="gt"><span>병 잡기</span><span>72%</span></div><div class="rc-bar"><i style="width:72%"></i></div></div>
+          <div class="g"><div class="gt"><span>주먹 쥐기</span><span>28%</span></div><div class="rc-bar"><i style="width:28%"></i></div></div></div></div></div>
+      <div class="gitem"><div class="gcap">오늘의 가이드</div>
+        <div class="phone sm"><div class="ph-eye">오늘의 가이드</div>
+          <div class="gd-card"><div class="l">Today</div><div class="t">손가락 펴기<br>5분</div></div>
+          <div class="gd-soft">짧게, 편한 만큼만. 오늘 못 해도 괜찮아요.</div></div></div>
+      <div class="gitem"><div class="gcap">주간 돌아보기</div>
+        <div class="phone sm"><div class="ph-eye">주간 돌아보기</div><div class="wk-t">3주째 함께</div><div class="wk-sub">다시 돌아오는 것</div>
+          <div class="wk-dots"><i class="on"></i><i class="on"></i><i class="mid"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="mid"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="mid"></i></div>
+          <div class="wk-note">편안한 날이 <b>2일 늘었어요.</b></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="system">
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ 05</div><h2>Design System</h2></div>
+    <p class="ds-intro">회복은 평가가 아니다. 그래서 시스템도 차분하게 잡았다. 넓은 여백, 부드러운 그린 하나, 압박 없는 말투. 큰 숫자는 자랑이 아니라 위로의 톤으로 쓴다.</p>
+
+    <div class="ds-block">
+      <div class="ds-label">Color</div>
+      <div class="ds-grp">Accent — 회복</div>
+      <div class="ds-sw">
+        <div class="sw"><div class="chip" style="background:#3E7C5F"></div><div class="nm">Green</div><div class="hex">#3E7C5F</div></div>
+        <div class="sw"><div class="chip" style="background:#2E6149"></div><div class="nm">Green Deep</div><div class="hex">#2E6149</div></div>
+        <div class="sw"><div class="chip" style="background:#EAF2ED"></div><div class="nm">Green Soft</div><div class="hex">#EAF2ED</div></div>
+      </div>
+      <div class="ds-grp">Neutral</div>
+      <div class="ds-sw">
+        <div class="sw"><div class="chip" style="background:#15171A"></div><div class="nm">Ink</div><div class="hex">#15171A</div></div>
+        <div class="sw"><div class="chip" style="background:#73776F"></div><div class="nm">Gray</div><div class="hex">#73776F</div></div>
+        <div class="sw"><div class="chip" style="background:#E7E8E4"></div><div class="nm">Line</div><div class="hex">#E7E8E4</div></div>
+        <div class="sw"><div class="chip" style="background:#F4F5F3"></div><div class="nm">Soft</div><div class="hex">#F4F5F3</div></div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <div class="ds-label">Typography — Pretendard</div>
+      <div class="ds-type">
+        <div class="ds-trow"><div class="ds-spec">Stat · 700</div><div style="font-size:40px;font-weight:700;letter-spacing:-.04em">4.2</div></div>
+        <div class="ds-trow"><div class="ds-spec">Title · 700</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em">오늘 손은 어땠나요?</div></div>
+        <div class="ds-trow"><div class="ds-spec">Body · 400</div><div style="font-size:16px;font-weight:400;color:var(--gray)">오늘 못 해도 괜찮아요</div></div>
+        <div class="ds-trow"><div class="ds-spec">Eyebrow · 600</div><div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--green)">오늘의 체크인</div></div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <div class="ds-label">Components</div>
+      <div class="ds-comp">
+        <div class="ds-tile"><div class="cap">선택 옵션</div>
+          <div class="ci-opt sel" style="width:100%;margin:0">편안했어요</div>
+          <div class="ci-opt" style="width:100%;margin:0">불편했어요</div>
+        </div>
+        <div class="ds-tile"><div class="cap">버튼</div>
+          <div class="ci-cta" style="width:100%">기록하기</div>
+        </div>
+        <div class="ds-tile"><div class="cap">그립 패턴 바</div>
+          <div style="width:100%"><div class="gt" style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:7px"><span>병 잡기</span><span style="color:var(--green)">72%</span></div><div class="rc-bar"><i style="width:72%"></i></div></div>
+        </div>
+        <div class="ds-tile"><div class="cap">가이드 카드</div>
+          <div class="gd-card" style="margin:0;padding:16px 18px"><div class="l">Today</div><div class="t" style="font-size:18px">손가락 펴기 5분</div></div>
+        </div>
+        <div class="ds-tile"><div class="cap">누적 점</div>
+          <div class="wk-dots" style="margin:0"><i class="on"></i><i class="on"></i><i class="mid"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i></div>
+        </div>
+        <div class="ds-tile"><div class="cap">Foundation</div>
+          <div style="font-size:15px;font-weight:500;color:var(--gray);line-height:1.9">Radius <b style="color:var(--ink)">16–20px</b><br>Tone <b style="color:var(--ink)">압박 없는 말투</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="blk-head"><div class="num">/ 06</div><h2>Role</h2></div>
+    <div class="roles">
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/path-flow.jpg" alt="데일리 경험 흐름"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">데일리 경험 흐름</div><p>체크인부터 돌아보기까지 매일의 여정 설계.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/path-dataviz.jpg" alt="데이터 시각화"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">데이터 시각화</div><p>비교 대신 누적, 압박 없는 회복 추이.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/path-emotion.jpg" alt="정서적 UX"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">정서적 UX · 말투</div><p>존엄을 지키는 카피와 톤 설계.</p></figcaption>
+      </figure>
+      <figure class="rcard">
+        <div class="slot"><!-- <img src="images/path-system.jpg" alt="디자인 시스템"> --><span class="slot-hint"><i>＋</i>이미지</span></div>
+        <figcaption><div class="rc-t">디자인 시스템 구축</div><p>차분한 팔레트와 여백의 토큰화.</p></figcaption>
+      </figure>
+    </div>
+    <p class="role-note">의수와 측정 하드웨어는 별도 팀의 영역. 데이터를 사람에게 어떻게 되돌려줄지, 그 경험을 설계했다.</p>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="next"><div><div class="nk">Back to start</div><h3>OMEGA</h3></div><a href="omega-case.html">메인 케이스로 →</a></div>
+    <div class="fbottom"><span>김여은 · UX/UI Designer</span><span>hello@yeoeun.design</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
